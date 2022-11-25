@@ -1,0 +1,16 @@
+.calculator {
+    border: 1px solid black;
+    width: 400px;
+    height: 600px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+.calculator .row {
+    // height: 16.67%;
+    height: calc(1/6) * 100%;
+    width: 100%;
+    margin-left: 0;
+}

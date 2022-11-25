@@ -1,0 +1,8 @@
+.button {
+}
+
+@for $i from 1 through 3 {
+  .btn-#{$i} {
+    width: 25% * $i;
+  }
+}

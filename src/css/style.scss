@@ -1,0 +1,22 @@
+@import './calculator';
+@import './button';
+@import './display';
+
+html, body, #root {
+    height: 100%;
+    padding: 10px;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: beige;
+}
+
+.App {
+    position: relative;
+    height: inherit;
+    // border: 1px solid blue;
+}

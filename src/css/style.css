@@ -1,0 +1,66 @@
+.calculator {
+  border: 1px solid black;
+  width: 400px;
+  height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.calculator .row {
+  height: 16.6666666667%;
+  width: 100%;
+  margin-left: 0;
+}
+
+.btn-1 {
+  width: 25%;
+}
+
+.btn-2 {
+  width: 50%;
+}
+
+.btn-3 {
+  width: 75%;
+}
+
+.monitor {
+  background-color: black;
+  color: white;
+  text-align: right;
+}
+.monitor .row {
+  height: auto;
+  width: auto;
+  margin-right: 0;
+  display: flex;
+}
+.monitor .row span {
+  align-self: flex-end;
+  padding: 1%;
+  font-size: 2.5rem;
+  width: 100%;
+}
+.monitor .row span.history {
+  font-size: 1rem;
+}
+
+html, body, #root {
+  height: 100%;
+  padding: 10px;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: beige;
+}
+
+.App {
+  position: relative;
+  height: inherit;
+}/*# sourceMappingURL=style.css.map */
