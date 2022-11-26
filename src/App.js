@@ -19,8 +19,19 @@ function App() {
   };
   const [memory, setMemory] = useState(initialMemory);
 
+  const initialState = {
+    currentOperator: { value: "", decimal: false, negative: false },
+    otherOperator: { value: "", decimal: false, negative: false },
+    operation: { value: "" },
+  };
+  const [state, setState] = useState(initialState);
+
   const isDecimal = (n) => {
     return n % 1 !== 0;
+  };
+
+  const isNegative = (n) => {
+    return n<0;
   };
 
   function getBestPrecisionNumber(n) {
@@ -46,6 +57,8 @@ function App() {
     // console.log(event);
     // const keyPressed = event.key;
     // console.log(keyPressed);
+    console.log("previous state ");
+    console.log(state);
 
     const buttonPressed = event.target;
     //console.log(buttonPressed);
@@ -57,108 +70,69 @@ function App() {
     // onClick σε όλα τα κουμπιά, με δεδομένη function, switch, τελικά Update display and state, and continue
     if (buttonPressedText === "AC") {
       // clean calculator
-      setMemory(initialMemory);
-      setMonitorText(initialMonitorText);
+      setState(initialState);
       return;
     }
     const actions = "+-*/";
     if (/^\d+$/.test(buttonPressedText)) {
       // digit pressed
-      setMonitorText((previousMonitorText) => {
-        if (
-          previousMonitorText.value === "0" ||
-          actions.includes(previousMonitorText.value)
-        ) {
-          // previous digit 0
-          return {
-            ...previousMonitorText,
-            value: buttonPressedText,
-          };
-        }
-        if (
-          /^\d+$/.test(previousMonitorText.value) ||
-          previousMonitorText.value.includes(".")
-        ) {
-          return {
-            ...previousMonitorText,
-            value: previousMonitorText.value + buttonPressedText,
-          };
-        }
-        // return {...previousMonitorText}
+      setState((previousState) => {
+        return {
+          ...previousState,
+          currentOperator: {
+            ...previousState.currentOperator,
+            value: previousState.currentOperator.value + buttonPressedText,
+          },
+        };
       });
+
+      // setMonitorText((previousMonitorText) => {
+      //   if (
+      //     previousMonitorText.value === "0" ||
+      //     actions.includes(previousMonitorText.value)
+      //   ) {
+      //     // previous digit 0
+      //     return {
+      //       ...previousMonitorText,
+      //       value: buttonPressedText,
+      //     };
+      //   }
+      //   if (
+      //     /^\d+$/.test(previousMonitorText.value) ||
+      //     previousMonitorText.value.includes(".")
+      //   ) {
+      //     return {
+      //       ...previousMonitorText,
+      //       value: previousMonitorText.value + buttonPressedText,
+      //     };
+      //   }
+      //   // return {...previousMonitorText}
+      // });
     }
     if (buttonPressedText === ".") {
       // pressed .
-      setMonitorText((previousMonitorText) => {
-        if (previousMonitorText.decimal) {
-          return previousMonitorText;
+      setState((previousState) => {
+        if (previousState.currentOperator.decimal) {
+          return previousState;
         } else {
-          return { value: previousMonitorText.value + ".", decimal: true };
+          return {
+            ...previousState,
+            currentOperator: {
+              ...previousState.currentOperator,
+              decimal: true,
+              value: previousState.currentOperator.value + ".",
+            },
+          };
         }
       });
-    }
-    if (buttonPressedText === "=") {
-      // λήξτο
-      let result;
-      setMemory((previousMemory) => {
-        // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
-        switch (previousMemory.expectedActionSymbol) {
-          case "+":
-            result =
-              Number(previousMemory.previousNumberEntered) +
-              Number(monitorText.value);
-            console.log(
-              Number(previousMemory.previousNumberEntered) +
-                "" +
-                Number(monitorText.value)
-            );
-            break;
-          case "-":
-            result =
-              Number(previousMemory.previousNumberEntered) -
-              Number(monitorText.value);
-            console.log(
-              Number(previousMemory.previousNumberEntered) +
-                "" +
-                Number(monitorText.value)
-            );
-            break;
-          case "*":
-            result =
-              Number(previousMemory.previousNumberEntered) *
-              Number(monitorText.value);
-            console.log(
-              Number(previousMemory.previousNumberEntered) +
-                "" +
-                Number(monitorText.value)
-            );
-            break;
-          case "/":
-            result =
-              Number(previousMemory.previousNumberEntered) /
-              Number(monitorText.value);
-            console.log(
-              Number(previousMemory.previousNumberEntered) +
-                "" +
-                Number(monitorText.value)
-            );
-            break;
-          default:
-            result = Number(previousMemory.previousNumberEntered);
-        }
-        result = getBestPrecisionNumber(result);
-        console.log("result" + " " + result);
-        if (isDecimal(result)) {
-          setMonitorText({ decimal: true, value: result });
-        } else {
-          setMonitorText({ ...initialMonitorText, value: result });
-        }
-        return initialMemory;
 
-        // console.log(typeof result);
-      });
-
-
+      // setMonitorText((previousMonitorText) => {
+      //   if (previousMonitorText.decimal) {
+      //     return previousMonitorText;
+      //   } else {
+      //     return { value: previousMonitorText.value + ".", decimal: true };
+      //   }
+      // });
     }
     if (
       buttonPressedText === "+" ||
@@ -166,14 +140,149 @@ function App() {
       buttonPressedText === "*" ||
       buttonPressedText === "/"
     ) {
-      let previousNumberEntered = monitorText.value;
+      // let previousNumberEntered = monitorText.value;
       // intialize calculator
-      setMonitorText({ ...initialMonitorText, value: buttonPressedText });
-      setMemory((previousMemory) => {
+      // setMonitorText({ ...initialMonitorText, value: buttonPressedText });
+      // setMemory((previousMemory) => {
+      //   return {
+      //     previousNumberEntered: previousNumberEntered,
+      //     expectedActionSymbol: buttonPressedText,
+      //   };
+      // });
+      let newOtherOperator = state.currentOperator;
+      setState((previousState) => {
         return {
-          previousNumberEntered: previousNumberEntered,
-          expectedActionSymbol: buttonPressedText,
+          ...initialState,
+          otherOperator: newOtherOperator,
+          operation: { value: buttonPressedText },
         };
+      });
+    }
+    if (buttonPressedText === "=") {
+      // λήξτο
+      let result;
+      setState((previousState) => {
+        // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
+        switch (previousState.operation.value) {
+          case "+":
+            result =
+              Number(previousState.otherOperator.value) +
+              Number(previousState.currentOperator.value);
+            console.log(
+              Number(previousState.otherOperator.value) +
+                "" +
+                Number(previousState.currentOperator.value)
+            );
+            break;
+          case "-":
+            result =
+              Number(previousState.otherOperator.value) -
+              Number(previousState.currentOperator.value);
+            console.log(
+              Number(previousState.otherOperator.value) +
+                "" +
+                Number(previousState.currentOperator.value)
+            );
+            break;
+          case "*":
+            result =
+              Number(previousState.otherOperator.value) *
+              Number(previousState.currentOperator.value);
+            console.log(
+              Number(previousState.otherOperator.value) +
+                "" +
+                Number(previousState.currentOperator.value)
+            );
+            break;
+          case "/":
+            result =
+              Number(previousState.otherOperator.value) /
+              Number(previousState.currentOperator.value);
+            console.log(
+              Number(previousState.otherOperator.value) +
+                "" +
+                Number(previousState.currentOperator.value)
+            );
+            break;
+          default:
+            result = Number(previousState.currentOperator);
+        }
+        result = getBestPrecisionNumber(result);
+        console.log("result " + result);
+
+        let decimal = isDecimal(result);
+        let negative = isNegative(result);
+        // if (isDecimal(result)) {
+        //   setMonitorText({ decimal: true, value: result });
+        // } else {
+        //   setMonitorText({ ...initialMonitorText, value: result });
+        // }
+
+        return {...initialState};
+        // μόνο όταν πατηθεί έπειτα απευθείας σύμβολο
+        // return {
+        //   currentOperator: { value: "", decimal: false, negative: false },
+        //   ...previousState,
+        //   otherOperator: { value: result, decimal: decimal, negative: negative},
+        // };
+
+        // let result;
+        // setMemory((previousMemory) => {
+        //   // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
+        //   switch (previousMemory.expectedActionSymbol) {
+        //     case "+":
+        //       result =
+        //         Number(previousMemory.previousNumberEntered) +
+        //         Number(monitorText.value);
+        //       console.log(
+        //         Number(previousMemory.previousNumberEntered) +
+        //           "" +
+        //           Number(monitorText.value)
+        //       );
+        //       break;
+        //     case "-":
+        //       result =
+        //         Number(previousMemory.previousNumberEntered) -
+        //         Number(monitorText.value);
+        //       console.log(
+        //         Number(previousMemory.previousNumberEntered) +
+        //           "" +
+        //           Number(monitorText.value)
+        //       );
+        //       break;
+        //     case "*":
+        //       result =
+        //         Number(previousMemory.previousNumberEntered) *
+        //         Number(monitorText.value);
+        //       console.log(
+        //         Number(previousMemory.previousNumberEntered) +
+        //           "" +
+        //           Number(monitorText.value)
+        //       );
+        //       break;
+        //     case "/":
+        //       result =
+        //         Number(previousMemory.previousNumberEntered) /
+        //         Number(monitorText.value);
+        //       console.log(
+        //         Number(previousMemory.previousNumberEntered) +
+        //           "" +
+        //           Number(monitorText.value)
+        //       );
+        //       break;
+        //     default:
+        //       result = Number(previousMemory.previousNumberEntered);
+        //   }
+        //   result = getBestPrecisionNumber(result);
+        //   console.log("result" + " " + result);
+        //   if (isDecimal(result)) {
+        //     setMonitorText({ decimal: true, value: result });
+        //   } else {
+        //     setMonitorText({ ...initialMonitorText, value: result });
+        //   }
+        //   return initialMemory;
+
+        // console.log(typeof result);
       });
     }
 
