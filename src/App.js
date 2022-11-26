@@ -19,8 +19,12 @@ function App() {
   };
   const [memory, setMemory] = useState(initialMemory);
 
+  const isDecimal = (n) => {
+    return n % 1 !== 0;
+  };
+
   function getBestPrecisionNumber(n) {
-    if(decimalCount(n)>4) {
+    if (decimalCount(n) > 4) {
       return Number(n).toFixed(4);
     } else {
       return n;
@@ -57,6 +61,121 @@ function App() {
       setMonitorText(initialMonitorText);
       return;
     }
+    const actions = "+-*/";
+    if (/^\d+$/.test(buttonPressedText)) {
+      // digit pressed
+      setMonitorText((previousMonitorText) => {
+        if (
+          previousMonitorText.value === "0" ||
+          actions.includes(previousMonitorText.value)
+        ) {
+          // previous digit 0
+          return {
+            ...previousMonitorText,
+            value: buttonPressedText,
+          };
+        }
+        if (
+          /^\d+$/.test(previousMonitorText.value) ||
+          previousMonitorText.value.includes(".")
+        ) {
+          return {
+            ...previousMonitorText,
+            value: previousMonitorText.value + buttonPressedText,
+          };
+        }
+        // return {...previousMonitorText}
+      });
+    }
+    if (buttonPressedText === ".") {
+      // pressed .
+      setMonitorText((previousMonitorText) => {
+        if (previousMonitorText.decimal) {
+          return previousMonitorText;
+        } else {
+          return { value: previousMonitorText.value + ".", decimal: true };
+        }
+      });
+    }
+    if (buttonPressedText === "=") {
+      // λήξτο
+      let result;
+      setMemory((previousMemory) => {
+        // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
+        switch (previousMemory.expectedActionSymbol) {
+          case "+":
+            result =
+              Number(previousMemory.previousNumberEntered) +
+              Number(monitorText.value);
+            console.log(
+              Number(previousMemory.previousNumberEntered) +
+                "" +
+                Number(monitorText.value)
+            );
+            break;
+          case "-":
+            result =
+              Number(previousMemory.previousNumberEntered) -
+              Number(monitorText.value);
+            console.log(
+              Number(previousMemory.previousNumberEntered) +
+                "" +
+                Number(monitorText.value)
+            );
+            break;
+          case "*":
+            result =
+              Number(previousMemory.previousNumberEntered) *
+              Number(monitorText.value);
+            console.log(
+              Number(previousMemory.previousNumberEntered) +
+                "" +
+                Number(monitorText.value)
+            );
+            break;
+          case "/":
+            result =
+              Number(previousMemory.previousNumberEntered) /
+              Number(monitorText.value);
+            console.log(
+              Number(previousMemory.previousNumberEntered) +
+                "" +
+                Number(monitorText.value)
+            );
+            break;
+          default:
+            result = Number(previousMemory.previousNumberEntered);
+        }
+        result = getBestPrecisionNumber(result);
+        console.log("result" + " " + result);
+        if (isDecimal(result)) {
+          setMonitorText({ decimal: true, value: result });
+        } else {
+          setMonitorText({ ...initialMonitorText, value: result });
+        }
+        return initialMemory;
+
+        // console.log(typeof result);
+      });
+
+
+    }
+    if (
+      buttonPressedText === "+" ||
+      buttonPressedText === "-" ||
+      buttonPressedText === "*" ||
+      buttonPressedText === "/"
+    ) {
+      let previousNumberEntered = monitorText.value;
+      // intialize calculator
+      setMonitorText({ ...initialMonitorText, value: buttonPressedText });
+      setMemory((previousMemory) => {
+        return {
+          previousNumberEntered: previousNumberEntered,
+          expectedActionSymbol: buttonPressedText,
+        };
+      });
+    }
 
     // FOLLOW THESE
     // αν πατηθεί = τότε επέστρεψε το history που θα κρατά την παράσταση
@@ -74,81 +193,81 @@ function App() {
     // --------------------- SEE HERE ---------------------------------------
     // Pressing an operator immediately following "=" should start a new calculation that operates on the result of the previous evaluation
 
-    setMonitorText((previousMonitorText) => {
-      // console.log(previousMonitorText);
-      let newState;
-      if (/^\d+$/.test(buttonPressedText)) {
-        // pressed a digit
-        const actions = "+-*/";
-        if (
-          previousMonitorText.value === "0" ||
-          actions.includes(previousMonitorText.value)
-        ) {
-          newState = buttonPressedText;
-        } else {
-          newState = previousMonitorText.value + buttonPressedText;
-        }
-        return { ...previousMonitorText, value: newState };
-      } else if (buttonPressedText === ".") {
-        // pressed .
-        if (previousMonitorText.decimal) {
-          return previousMonitorText;
-        } else {
-          return { value: previousMonitorText.value + ".", decimal: true };
-        }
-      } else {
-        // go for the other options . -+/* = in setMemory
-        // console.log("other option except digit");
-        return previousMonitorText;
-      }
-    });
+    // setMonitorText((previousMonitorText) => {
+    //   // console.log(previousMonitorText);
+    //   let newState;
+    //   if (/^\d+$/.test(buttonPressedText)) {
+    //     // pressed a digit
+    //     const actions = "+-*/";
+    //     if (
+    //       previousMonitorText.value === "0" ||
+    //       actions.includes(previousMonitorText.value)
+    //     ) {
+    //       newState = buttonPressedText;
+    //     } else {
+    //       newState = previousMonitorText.value + buttonPressedText;
+    //     }
+    //     return { ...previousMonitorText, value: newState };
+    //   } else if (buttonPressedText === ".") {
+    //     // pressed .
+    //     if (previousMonitorText.decimal) {
+    //       return previousMonitorText;
+    //     } else {
+    //       return { value: previousMonitorText.value + ".", decimal: true };
+    //     }
+    //   } else {
+    //     // go for the other options . -+/* = in setMemory
+    //     // console.log("other option except digit");
+    //     return previousMonitorText;
+    //   }
+    // });
 
-    // console.log(memory);
-    setMemory((previousMemory) => {
-      if (buttonPressedText === "=") {
-        // λήξτο
-        let result;
-        // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
-        switch (previousMemory.expectedActionSymbol) {
-          case "+":
-            result = Number(previousMemory.previousNumberEntered) + Number(monitorText.value);
-            break;
-          case "-":
-            result = Number(previousMemory.previousNumberEntered) - Number(monitorText.value);
-            break;
-          case "*":
-            result = Number(previousMemory.previousNumberEntered) * Number(monitorText.value);
-            break;
-          case "/":
-            result = Number(previousMemory.previousNumberEntered) / Number(monitorText.value);
-            break;
-          default:
-            result = Number(previousMemory.previousNumberEntered);
-        }
-        // console.log(typeof result);
+    // // console.log(memory);
+    // setMemory((previousMemory) => {
+    //   if (buttonPressedText === "=") {
+    //     // λήξτο
+    //     let result;
+    //     // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
+    //     switch (previousMemory.expectedActionSymbol) {
+    //       case "+":
+    //         result = Number(previousMemory.previousNumberEntered) + Number(monitorText.value);
+    //         break;
+    //       case "-":
+    //         result = Number(previousMemory.previousNumberEntered) - Number(monitorText.value);
+    //         break;
+    //       case "*":
+    //         result = Number(previousMemory.previousNumberEntered) * Number(monitorText.value);
+    //         break;
+    //       case "/":
+    //         result = Number(previousMemory.previousNumberEntered) / Number(monitorText.value);
+    //         break;
+    //       default:
+    //         result = Number(previousMemory.previousNumberEntered);
+    //     }
+    //     // console.log(typeof result);
 
-        result = getBestPrecisionNumber(result);
-        console.log(result);
-        setMonitorText({ ...initialMonitorText, value: result });
-        return initialMemory;
-      } else if (
-        buttonPressedText === "+" ||
-        buttonPressedText === "-" ||
-        buttonPressedText === "*" ||
-        buttonPressedText === "/"
-      ) {
-        let previousNumberEntered = monitorText.value;
-        // intialize calculator
-        setMonitorText({ ...initialMonitorText, value: buttonPressedText });
+    //     result = getBestPrecisionNumber(result);
+    //     console.log(result);
+    //     setMonitorText({ ...initialMonitorText, value: result });
+    //     return initialMemory;
+    //   } else if (
+    //     buttonPressedText === "+" ||
+    //     buttonPressedText === "-" ||
+    //     buttonPressedText === "*" ||
+    //     buttonPressedText === "/"
+    //   ) {
+    //     let previousNumberEntered = monitorText.value;
+    //     // intialize calculator
+    //     setMonitorText({ ...initialMonitorText, value: buttonPressedText });
 
-        return {
-          previousNumberEntered: previousNumberEntered,
-          expectedActionSymbol: buttonPressedText,
-        };
-      }
-      return previousMemory;
-      // Hint! : don' t display history to the calculator in order to pass tests
-    });
+    //     return {
+    //       previousNumberEntered: previousNumberEntered,
+    //       expectedActionSymbol: buttonPressedText,
+    //     };
+    //   }
+    //   return previousMemory;
+    //   // Hint! : don' t display history to the calculator in order to pass tests
+    // });
 
     // GENERAL INSTRUCTIONS TO DO
     // here you can put the logic to update all the state depending the key which pressed,
