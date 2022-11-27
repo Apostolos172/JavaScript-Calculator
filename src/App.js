@@ -10,14 +10,17 @@ import { useState } from "react";
 // });
 
 function App() {
-  const initialMonitorText = { value: "0", decimal: false };
-  const [monitorText, setMonitorText] = useState(initialMonitorText);
+  // const initialMonitorText = { value: "0", decimal: false };
+  // const [monitorText, setMonitorText] = useState(initialMonitorText);
 
-  const initialMemory = {
-    previousNumberEntered: 0,
-    expectedActionSymbol: "",
-  };
-  const [memory, setMemory] = useState(initialMemory);
+  // const initialMemory = {
+  //   previousNumberEntered: 0,
+  //   expectedActionSymbol: "",
+  // };
+  // const [memory, setMemory] = useState(initialMemory);
+
+  const initialDisplay = "0";
+  const [display, setDisplay] = useState(initialDisplay);
 
   const initialState = {
     currentOperator: { value: "", decimal: false, negative: false },
@@ -26,12 +29,42 @@ function App() {
   };
   const [state, setState] = useState(initialState);
 
+  // useful functions
+  const calculateResult2OpBasedOnOp = (
+    firstOperator,
+    operation,
+    secondOperator
+  ) => {
+    let result;
+    switch (operation) {
+      case "+":
+        result = Number(firstOperator) + Number(secondOperator);
+        console.log(Number(firstOperator) + " " + Number(secondOperator));
+        break;
+      case "-":
+        result = Number(firstOperator) - Number(secondOperator);
+        console.log(Number(firstOperator) + " " + Number(secondOperator));
+        break;
+      case "*":
+        result = Number(firstOperator) * Number(secondOperator);
+        console.log(Number(firstOperator) + " " + Number(secondOperator));
+        break;
+      case "/":
+        result = Number(firstOperator) / Number(secondOperator);
+        console.log(Number(firstOperator) + " " + Number(secondOperator));
+        break;
+      default:
+        result = Number(secondOperator);
+    }
+    return result;
+  };
+
   const isDecimal = (n) => {
     return n % 1 !== 0;
   };
 
   const isNegative = (n) => {
-    return n<0;
+    return n < 0;
   };
 
   function getBestPrecisionNumber(n) {
@@ -53,7 +86,31 @@ function App() {
     return 0;
   };
 
+  // the calculator
   const callBackForClickEvents = (event) => {
+    // tests must be done
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+    // σκέψου μήπως να τα αποθηκεύουμε την είσοδο σε ένα array
+
+    /*
+    1 για το display θα το δούμε στο τέλος
+    2 DONE θα τσεκάρω όταν πατηθεί operation symbol αν δεν είναι κενό το other operator δηλαδή αν δεν πρόκειται για την πρώτη πράξη
+    που θα κάνω τότε πρωτού αποθηκεύσει την νέα πράξη να παίρνει το other operator και με το current operator να εκτελεί την ήδη 
+    αποθηκευμένη πράξη, έπειτα να βάζει το αποτέλεσμα στo other operator, να καθαρίζει το current και να ολοκληρώνει 
+    έτσι ώστε όταν πατηθεί το = τελικά να γίνεται η επιθυμητή πράξη
+    3 decimals DONE
+    4 negative values and συνεχόμενα σύμβολα : πρώτα θα πρέπει να τσεκάρω αυτό πριν υλοποιήσω το 2 SOS, η τελευταία επιλογή πάντα
+    θα είναι να ανανεώνει την πράξη, το πότε θα εκτελέσει το 2 μπορεί και όταν λάβει το πρώτο ψηφίο του επόμενου αριθμού
+    Τώρα για αρνητικούς όταν εισάγεται - αν πρόκειται περί αφαίρεσης το βλέπεις με βάση το προηγούμενο εισακτέο, το χώνεις στην πράξη και
+    συνεχίζεις αν πρόκειται περί αριθμού αρνητικού το χώνεις στον αριθμό και προχωράς
+    5 5 - 2 = / 2 = αν ο προηγούμενος χαρακτήρας από σύμβολο πράξης είναι ίσον να έχουμε αποθηκευμένο και το αποτέλεσμα και τελικά
+    να το τοποθετούμε στο Other operator
+    θα πάω στο = και θα το αποθηκεύω ως πράξη και στο otherOperator το result, και έπειτα
+    στο διάβασμα αριθμού θα τσεκάρω αν η πράξη είναι = καθάρισε otherOperator(not necessary) and operation(not necessary), will see
+    6 ακρίβεια δεκαδικών πρέπει να είμαστε καλά
+    */
+
     // console.log(event);
     // const keyPressed = event.key;
     // console.log(keyPressed);
@@ -68,9 +125,12 @@ function App() {
 
     // to do
     // onClick σε όλα τα κουμπιά, με δεδομένη function, switch, τελικά Update display and state, and continue
+    setDisplay(buttonPressedText);
+
     if (buttonPressedText === "AC") {
       // clean calculator
       setState(initialState);
+      setDisplay(initialDisplay);
       return;
     }
     const actions = "+-*/";
@@ -149,64 +209,63 @@ function App() {
       //     expectedActionSymbol: buttonPressedText,
       //   };
       // });
-      let newOtherOperator = state.currentOperator;
+
+      // 2 θα τσεκάρω όταν πατηθεί operation symbol αν δεν είναι κενό το other operator δηλαδή αν δεν πρόκειται για την πρώτη πράξη
+      // που θα κάνω, τότε πρωτού αποθηκεύσει την νέα πράξη να παίρνει το other operator και με το current operator να εκτελεί την ήδη
+      // αποθηκευμένη πράξη, έπειτα να βάζει το αποτέλεσμα στo other operator, να καθαρίζει το current και να ολοκληρώνει
+      // έτσι ώστε όταν πατηθεί το = τελικά να γίνεται η επιθυμητή πράξη
+      // test 3 + 5 * 6 - 2 / 4 for example 32.5 or 11.5
       setState((previousState) => {
-        return {
-          ...initialState,
-          otherOperator: newOtherOperator,
-          operation: { value: buttonPressedText },
-        };
+        if (previousState.otherOperator.value !== "") {
+          // δεν είμαστε στην πρώτη πράξη που θέλει να συμβεί
+          let firstOperator = previousState.otherOperator.value;
+          let operation = previousState.operation.value;
+          let secondOperator = previousState.currentOperator.value;
+          let result = calculateResult2OpBasedOnOp(
+            firstOperator,
+            operation,
+            secondOperator
+          );
+          let newOtherOperator = {
+            value: result,
+            negative: isNegative(result),
+            decimal: isDecimal(result),
+          };
+
+          return {
+            ...initialState,
+            otherOperator: newOtherOperator,
+            operation: { value: buttonPressedText },
+          };
+        } else {
+          // την πρώτη φορά που πατιέται σύμβολο
+          let newOtherOperator = state.currentOperator;
+
+          return {
+            ...initialState,
+            otherOperator: newOtherOperator,
+            operation: { value: buttonPressedText },
+          };
+        }
       });
     }
     if (buttonPressedText === "=") {
+      /*
+      5 - 2 = / 2 = αν ο προηγούμενος χαρακτήρας από σύμβολο πράξης είναι ίσον να έχουμε αποθηκευμένο και το αποτέλεσμα και τελικά
+      να το τοποθετούμε στο Other operator
+      θα πάω στο = και θα το αποθηκεύω ως πράξη και στο otherOperator το result, και έπειτα
+      (εξασφαλίζω την πράξη ή μη με τον έλεγχο OtherOperator !=="" στα operations, με βάση αυτό βασικό το βάζω στο current operation)
+      στο διάβασμα αριθμού θα τσεκάρω αν η πράξη είναι = καθάρισε otherOperator(not necessary) and operation(not necessary), will see
+      */
       // λήξτο
       let result;
       setState((previousState) => {
         // πρόσεχε είναι 0 στην αρχή κάπου θα δημιουργηθούν προβλήματα
-        switch (previousState.operation.value) {
-          case "+":
-            result =
-              Number(previousState.otherOperator.value) +
-              Number(previousState.currentOperator.value);
-            console.log(
-              Number(previousState.otherOperator.value) +
-                "" +
-                Number(previousState.currentOperator.value)
-            );
-            break;
-          case "-":
-            result =
-              Number(previousState.otherOperator.value) -
-              Number(previousState.currentOperator.value);
-            console.log(
-              Number(previousState.otherOperator.value) +
-                "" +
-                Number(previousState.currentOperator.value)
-            );
-            break;
-          case "*":
-            result =
-              Number(previousState.otherOperator.value) *
-              Number(previousState.currentOperator.value);
-            console.log(
-              Number(previousState.otherOperator.value) +
-                "" +
-                Number(previousState.currentOperator.value)
-            );
-            break;
-          case "/":
-            result =
-              Number(previousState.otherOperator.value) /
-              Number(previousState.currentOperator.value);
-            console.log(
-              Number(previousState.otherOperator.value) +
-                "" +
-                Number(previousState.currentOperator.value)
-            );
-            break;
-          default:
-            result = Number(previousState.currentOperator);
-        }
+        result = calculateResult2OpBasedOnOp(
+          previousState.otherOperator.value,
+          previousState.operation.value,
+          previousState.currentOperator.value
+        );
         result = getBestPrecisionNumber(result);
         console.log("result " + result);
 
@@ -218,7 +277,7 @@ function App() {
         //   setMonitorText({ ...initialMonitorText, value: result });
         // }
 
-        return {...initialState};
+        return { ...initialState };
         // μόνο όταν πατηθεί έπειτα απευθείας σύμβολο
         // return {
         //   currentOperator: { value: "", decimal: false, negative: false },
@@ -391,7 +450,7 @@ function App() {
   return (
     <div className="App fluid-container">
       <Calculator
-        display={monitorText.value}
+        display={display}
         onclick={callBackForClickEvents}
       ></Calculator>
     </div>
