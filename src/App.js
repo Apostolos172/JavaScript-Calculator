@@ -137,6 +137,18 @@ function App() {
     if (/^\d+$/.test(buttonPressedText)) {
       // digit pressed
       setState((previousState) => {
+        if (previousState.operation.value === "=") {
+          // πατήθηκε άμεσα αριθμός μετά το =\
+          // 5 - 2 = / 2 = τσέκαρε
+          return {
+            ...initialState,
+            // operation: { value: "later" },
+            currentOperator: {
+              ...previousState.currentOperator,
+              value: buttonPressedText,
+            },
+          };
+        }
         return {
           ...previousState,
           currentOperator: {
@@ -275,7 +287,15 @@ function App() {
         //   setMonitorText({ ...initialMonitorText, value: result });
         // }
 
-        return { ...initialState, currentOperator: { value: result, decimal: isDecimal(result), negative: isNegative(result)} };
+        return {
+          ...initialState,
+          currentOperator: {
+            value: result,
+            decimal: isDecimal(result),
+            negative: isNegative(result),
+          },
+          operation: { value: "=" },
+        };
         // μόνο όταν πατηθεί έπειτα απευθείας σύμβολο
         // return {
         //   currentOperator: { value: "", decimal: false, negative: false },
