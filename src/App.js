@@ -269,15 +269,13 @@ function App() {
         result = getBestPrecisionNumber(result);
         console.log("result " + result);
 
-        let decimal = isDecimal(result);
-        let negative = isNegative(result);
         // if (isDecimal(result)) {
         //   setMonitorText({ decimal: true, value: result });
         // } else {
         //   setMonitorText({ ...initialMonitorText, value: result });
         // }
 
-        return { ...initialState };
+        return { ...initialState, currentOperator: { value: result, decimal: isDecimal(result), negative: isNegative(result)} };
         // μόνο όταν πατηθεί έπειτα απευθείας σύμβολο
         // return {
         //   currentOperator: { value: "", decimal: false, negative: false },
