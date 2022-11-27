@@ -143,7 +143,19 @@ function App() {
 
     // to do
     // onClick σε όλα τα κουμπιά, με δεδομένη function, switch, τελικά Update display and state, and continue
-    setDisplay(buttonPressedText);
+    //setDisplay(buttonPressedText);
+    // console.log(state.currentOperator.value)
+    // let temp = (state.currentOperator.value).replace(/0/g, "");
+    // console.log(temp);
+    // if (buttonPressedText === "0" && temp.length === 0) {
+    if (/^\d+$/.test(buttonPressedText) || buttonPressedText === ".") {
+      // setDisplay(parseInt(state.currentOperator.value, 10) + buttonPressedText);
+      console.log(typeof state.currentOperator.value)
+      let tempNum = state.currentOperator.value.toString().replace(/^0+/, '');
+      setDisplay(tempNum + buttonPressedText);
+    } else {
+      setDisplay(buttonPressedText);
+    }
     // setState((previousState) => {
     //   return { ...previousState, previousState: previousState};
     // });
@@ -365,6 +377,8 @@ function App() {
         );
         result = getBestPrecisionNumber(result);
         console.log("result " + result);
+        console.log(typeof result);
+        setDisplay(result);
 
         // if (isDecimal(result)) {
         //   setMonitorText({ decimal: true, value: result });
