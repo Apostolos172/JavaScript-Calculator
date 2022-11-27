@@ -30,12 +30,13 @@ function App() {
     previousButtonPressed: "",
   };
   const [state, setState] = useState(initialState);
-  const initialFirstButtonPressed = true;
-  const [firstButtonPressed, setFirstButtonPressed] = useState(
-    initialFirstButtonPressed
-  );
+  // const initialFirstButtonPressed = true;
+  // const [firstButtonPressed, setFirstButtonPressed] = useState(
+  //   initialFirstButtonPressed
+  // );
   const initialButtonPressed = "";
-  const [previousButtonPressed, setPreviousButtonPressed] = useState(initialButtonPressed);
+  const [previousButtonPressed, setPreviousButtonPressed] =
+    useState(initialButtonPressed);
 
   // useful functions
   const calculateResult2OpBasedOnOp = (
@@ -150,6 +151,7 @@ function App() {
       // clean calculator
       setState(initialState);
       setDisplay(initialDisplay);
+      setPreviousButtonPressed(initialButtonPressed);
       // setFirstButtonPressed(initialFirstButtonPressed);
       return;
     }
@@ -277,6 +279,36 @@ function App() {
       */
 
       setState((previousState) => {
+        // new test correction
+        // debugger
+        if (
+          buttonPressedText === "-" &&
+          // actions.includes(previousState.previousButtonPressed) &&
+          actions.includes(previousButtonPressed) &&
+          // previousState.previousButtonPressed !== ""
+          previousButtonPressed !== ""
+        ) {
+          return {
+            previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
+            ...previousState,
+            currentOperator: { ...previousState.currentOperator, value: "-" },
+          };
+        }
+        if (
+          // actions.includes(previousState.previousButtonPressed) &&
+          actions.includes(previousButtonPressed) &&
+          // previousState.previousButtonPressed !== ""
+          previousButtonPressed !== ""
+        ) {
+          return {
+            ...previousState,
+            previousButtonPressed: previousButtonPressed,
+            previousState: previousState,
+            operation: { value: buttonPressedText },
+          };
+        }
+
         if (previousState.otherOperator.value !== "") {
           // δεν είμαστε στην πρώτη πράξη που θέλει να συμβεί
           let firstOperator = previousState.otherOperator.value;
