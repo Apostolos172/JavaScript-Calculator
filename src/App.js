@@ -27,8 +27,15 @@ function App() {
     otherOperator: { value: "", decimal: false, negative: false },
     operation: { value: "" },
     previousState: {},
+    previousButtonPressed: "",
   };
   const [state, setState] = useState(initialState);
+  const initialFirstButtonPressed = true;
+  const [firstButtonPressed, setFirstButtonPressed] = useState(
+    initialFirstButtonPressed
+  );
+  const initialButtonPressed = "";
+  const [previousButtonPressed, setPreviousButtonPressed] = useState(initialButtonPressed);
 
   // useful functions
   const calculateResult2OpBasedOnOp = (
@@ -143,8 +150,12 @@ function App() {
       // clean calculator
       setState(initialState);
       setDisplay(initialDisplay);
+      // setFirstButtonPressed(initialFirstButtonPressed);
       return;
     }
+    // if(!firstButtonPressed) {
+    //   setFirstButtonPressed()
+    // }
     const actions = "+-*/";
     if (/^\d+$/.test(buttonPressedText)) {
       // digit pressed
@@ -155,6 +166,7 @@ function App() {
           return {
             ...initialState,
             previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
             // operation: { value: "later" },
             currentOperator: {
               ...previousState.currentOperator,
@@ -165,6 +177,7 @@ function App() {
         return {
           ...previousState,
           previousState: previousState,
+          previousButtonPressed: previousButtonPressed,
           currentOperator: {
             ...previousState.currentOperator,
             value: previousState.currentOperator.value + buttonPressedText,
@@ -199,11 +212,16 @@ function App() {
       // pressed .
       setState((previousState) => {
         if (previousState.currentOperator.decimal) {
-          return { ...previousState, previousState: previousState };
+          return {
+            ...previousState,
+            previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
+          };
         } else {
           return {
             ...previousState,
             previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
             currentOperator: {
               ...previousState.currentOperator,
               decimal: true,
@@ -278,6 +296,7 @@ function App() {
           return {
             ...initialState,
             previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
             otherOperator: newOtherOperator,
             operation: { value: buttonPressedText },
           };
@@ -288,6 +307,7 @@ function App() {
           return {
             ...initialState,
             previousState: previousState,
+            previousButtonPressed: previousButtonPressed,
             otherOperator: newOtherOperator,
             operation: { value: buttonPressedText },
           };
@@ -323,6 +343,7 @@ function App() {
         return {
           ...initialState,
           previousState: previousState,
+          previousButtonPressed: previousButtonPressed,
           currentOperator: {
             value: result,
             decimal: isDecimal(result),
@@ -492,6 +513,7 @@ function App() {
     // GENERAL INSTRUCTIONS TO DO
     // here you can put the logic to update all the state depending the key which pressed,
     // either for the monitor, or the under the hood calculations
+    setPreviousButtonPressed(buttonPressedText);
   };
 
   // const listenForKeyboardEvents = () => {
