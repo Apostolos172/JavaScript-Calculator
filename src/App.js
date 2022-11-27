@@ -26,6 +26,7 @@ function App() {
     currentOperator: { value: "", decimal: false, negative: false },
     otherOperator: { value: "", decimal: false, negative: false },
     operation: { value: "" },
+    previousState: {},
   };
   const [state, setState] = useState(initialState);
 
@@ -99,12 +100,21 @@ function App() {
     που θα κάνω τότε πρωτού αποθηκεύσει την νέα πράξη να παίρνει το other operator και με το current operator να εκτελεί την ήδη 
     αποθηκευμένη πράξη, έπειτα να βάζει το αποτέλεσμα στo other operator, να καθαρίζει το current και να ολοκληρώνει 
     έτσι ώστε όταν πατηθεί το = τελικά να γίνεται η επιθυμητή πράξη
+    // test 3 + 5 * 6 - 2 / 4 for example 32.5 or 11.5
     3 decimals DONE
-    4 negative values and συνεχόμενα σύμβολα : πρώτα θα πρέπει να τσεκάρω αυτό πριν υλοποιήσω το 2 SOS, η τελευταία επιλογή πάντα
+    4 
+    5 * - 5
+    6+/3
+    If 2 or more operators are entered consecutively, the operation performed should be the last operator 
+    entered (excluding the negative (-) sign.
+    θα πρέπει όταν είμαι στα σύμβολα να ελέγχω αν το προηγούμενο button pressed ήταν πράξη τότε να διαφοροποιεί τους τελεστές
+    ώστε να γίνεται πράξη με τα τωρινά σύμβολα (θα κρατήσω όλο το προηγούμενο state μέσα στο state με button pressed νέο πεδίο)
+
+    negative values and συνεχόμενα σύμβολα : πρώτα θα πρέπει να τσεκάρω αυτό πριν υλοποιήσω το 2 SOS, η τελευταία επιλογή πάντα
     θα είναι να ανανεώνει την πράξη, το πότε θα εκτελέσει το 2 μπορεί και όταν λάβει το πρώτο ψηφίο του επόμενου αριθμού
     Τώρα για αρνητικούς όταν εισάγεται - αν πρόκειται περί αφαίρεσης το βλέπεις με βάση το προηγούμενο εισακτέο, το χώνεις στην πράξη και
     συνεχίζεις αν πρόκειται περί αριθμού αρνητικού το χώνεις στον αριθμό και προχωράς
-    5 5 - 2 = / 2 = αν ο προηγούμενος χαρακτήρας από σύμβολο πράξης είναι ίσον να έχουμε αποθηκευμένο και το αποτέλεσμα και τελικά
+    5 DONE 5 - 2 = / 2 = αν ο προηγούμενος χαρακτήρας από σύμβολο πράξης είναι ίσον να έχουμε αποθηκευμένο και το αποτέλεσμα και τελικά
     να το τοποθετούμε στο Other operator
     θα πάω στο = και θα το αποθηκεύω ως πράξη και στο otherOperator το result, και έπειτα
     στο διάβασμα αριθμού θα τσεκάρω αν η πράξη είναι = καθάρισε otherOperator(not necessary) and operation(not necessary), will see
@@ -126,7 +136,9 @@ function App() {
     // to do
     // onClick σε όλα τα κουμπιά, με δεδομένη function, switch, τελικά Update display and state, and continue
     setDisplay(buttonPressedText);
-
+    // setState((previousState) => {
+    //   return { ...previousState, previousState: previousState};
+    // });
     if (buttonPressedText === "AC") {
       // clean calculator
       setState(initialState);
@@ -142,6 +154,7 @@ function App() {
           // 5 - 2 = / 2 = τσέκαρε
           return {
             ...initialState,
+            previousState: previousState,
             // operation: { value: "later" },
             currentOperator: {
               ...previousState.currentOperator,
@@ -151,6 +164,7 @@ function App() {
         }
         return {
           ...previousState,
+          previousState: previousState,
           currentOperator: {
             ...previousState.currentOperator,
             value: previousState.currentOperator.value + buttonPressedText,
@@ -185,10 +199,11 @@ function App() {
       // pressed .
       setState((previousState) => {
         if (previousState.currentOperator.decimal) {
-          return previousState;
+          return { ...previousState, previousState: previousState };
         } else {
           return {
             ...previousState,
+            previousState: previousState,
             currentOperator: {
               ...previousState.currentOperator,
               decimal: true,
@@ -227,6 +242,22 @@ function App() {
       // αποθηκευμένη πράξη, έπειτα να βάζει το αποτέλεσμα στo other operator, να καθαρίζει το current και να ολοκληρώνει
       // έτσι ώστε όταν πατηθεί το = τελικά να γίνεται η επιθυμητή πράξη
       // test 3 + 5 * 6 - 2 / 4 for example 32.5 or 11.5
+
+      /*
+      4 
+      5 * - 5
+      6+/3
+      If 2 or more operators are entered consecutively, the operation performed should be the last operator 
+      entered (excluding the negative (-) sign.
+      θα πρέπει όταν είμαι στα σύμβολα να ελέγχω αν το προηγούμενο button pressed ήταν πράξη τότε να διαφοροποιεί τους τελεστές
+      ώστε να γίνεται πράξη με τα τωρινά σύμβολα (θα κρατήσω όλο το προηγούμενο state μέσα στο state με button pressed νέο πεδίο)
+  
+      negative values and συνεχόμενα σύμβολα : πρώτα θα πρέπει να τσεκάρω αυτό πριν υλοποιήσω το 2 SOS, η τελευταία επιλογή πάντα
+      θα είναι να ανανεώνει την πράξη, το πότε θα εκτελέσει το 2 μπορεί και όταν λάβει το πρώτο ψηφίο του επόμενου αριθμού
+      Τώρα για αρνητικούς όταν εισάγεται - αν πρόκειται περί αφαίρεσης το βλέπεις με βάση το προηγούμενο εισακτέο, το χώνεις στην πράξη και
+      συνεχίζεις αν πρόκειται περί αριθμού αρνητικού το χώνεις στον αριθμό και προχωράς
+      */
+
       setState((previousState) => {
         if (previousState.otherOperator.value !== "") {
           // δεν είμαστε στην πρώτη πράξη που θέλει να συμβεί
@@ -246,6 +277,7 @@ function App() {
 
           return {
             ...initialState,
+            previousState: previousState,
             otherOperator: newOtherOperator,
             operation: { value: buttonPressedText },
           };
@@ -255,6 +287,7 @@ function App() {
 
           return {
             ...initialState,
+            previousState: previousState,
             otherOperator: newOtherOperator,
             operation: { value: buttonPressedText },
           };
@@ -289,6 +322,7 @@ function App() {
 
         return {
           ...initialState,
+          previousState: previousState,
           currentOperator: {
             value: result,
             decimal: isDecimal(result),
