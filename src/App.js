@@ -148,10 +148,15 @@ function App() {
     // let temp = (state.currentOperator.value).replace(/0/g, "");
     // console.log(temp);
     // if (buttonPressedText === "0" && temp.length === 0) {
-    if (/^\d+$/.test(buttonPressedText) || buttonPressedText === ".") {
+    //  debugger
+    if (
+      (/^\d+$/.test(buttonPressedText) || buttonPressedText === ".") &&
+      previousButtonPressed !== "="
+    ) {
+      //let tem = previousButtonPressed
       // setDisplay(parseInt(state.currentOperator.value, 10) + buttonPressedText);
-      console.log(typeof state.currentOperator.value)
-      let tempNum = state.currentOperator.value.toString().replace(/^0+/, '');
+      console.log(typeof state.currentOperator.value);
+      let tempNum = state.currentOperator.value.toString().replace(/^0+/, "");
       setDisplay(tempNum + buttonPressedText);
     } else {
       setDisplay(buttonPressedText);
