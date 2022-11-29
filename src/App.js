@@ -38,7 +38,14 @@ function App() {
   const [previousButtonPressed, setPreviousButtonPressed] =
     useState(initialButtonPressed);
 
+  const tempStateMinusInitial = {};
+  const [tempStateMinus, setTempStateMinus] = useState(tempStateMinusInitial);
+
   // useful functions
+  const isEmpty = (obj) => {
+    return Object.keys(obj).length === 0;
+  };
+
   const calculateResult2OpBasedOnOp = (
     firstOperator,
     operation,
@@ -112,6 +119,7 @@ function App() {
     3 decimals DONE
     4 
     5 * - 5
+    // 5 * - + 5 doesn' t work
     6+/3
     If 2 or more operators are entered consecutively, the operation performed should be the last operator 
     entered (excluding the negative (-) sign.
@@ -169,6 +177,7 @@ function App() {
       setState(initialState);
       setDisplay(initialDisplay);
       setPreviousButtonPressed(initialButtonPressed);
+      setTempStateMinus(tempStateMinusInitial);
       // setFirstButtonPressed(initialFirstButtonPressed);
       return;
     }
@@ -178,6 +187,13 @@ function App() {
     const actions = "+-*/";
     if (/^\d+$/.test(buttonPressedText)) {
       // digit pressed
+      let additionToTheBeginning;
+      if (!isEmpty(tempStateMinus)) {
+        additionToTheBeginning = "-";
+      } else {
+        additionToTheBeginning = "";
+      }
+
       setState((previousState) => {
         if (previousState.operation.value === "=") {
           // πατήθηκε άμεσα αριθμός μετά το =\
@@ -199,7 +215,10 @@ function App() {
           previousButtonPressed: previousButtonPressed,
           currentOperator: {
             ...previousState.currentOperator,
-            value: previousState.currentOperator.value + buttonPressedText,
+            value:
+              previousState.currentOperator.value +
+              additionToTheBeginning +
+              buttonPressedText,
           },
         };
       });
@@ -297,6 +316,7 @@ function App() {
 
       setState((previousState) => {
         // new test correction
+        // 5 * - + 5 doesn' t work
         // debugger
         if (
           buttonPressedText === "-" &&
@@ -305,12 +325,20 @@ function App() {
           // previousState.previousButtonPressed !== ""
           previousButtonPressed !== ""
         ) {
-          return {
-            previousState: previousState,
-            previousButtonPressed: previousButtonPressed,
+          let newState = {
+            previousState: previousState, // άχρηστο
+            previousButtonPressed: previousButtonPressed, // άχρηστο
             ...previousState,
             currentOperator: { ...previousState.currentOperator, value: "-" },
           };
+          setTempStateMinus(newState);
+          // return {
+          //   previousState: previousState, // άχρηστο
+          //   previousButtonPressed: previousButtonPressed, // άχρηστο
+          //   ...previousState,
+          //   currentOperator: { ...previousState.currentOperator, value: "-" },
+          // };
+          return previousState;
         }
         if (
           // actions.includes(previousState.previousButtonPressed) &&
@@ -318,6 +346,7 @@ function App() {
           // previousState.previousButtonPressed !== ""
           previousButtonPressed !== ""
         ) {
+          setTempStateMinus(tempStateMinusInitial);
           return {
             ...previousState,
             previousButtonPressed: previousButtonPressed,
@@ -326,6 +355,7 @@ function App() {
           };
         }
 
+        setTempStateMinus(tempStateMinusInitial);
         if (previousState.otherOperator.value !== "") {
           // δεν είμαστε στην πρώτη πράξη που θέλει να συμβεί
           let firstOperator = previousState.otherOperator.value;
