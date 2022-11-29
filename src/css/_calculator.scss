@@ -1,16 +1,22 @@
 .calculator {
-    border: 1px solid black;
-    width: 400px;
-    height: 600px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
+  border: 1px solid black;
+  width: 400px;
+  height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  box-shadow: 10px 15px 5px purple;
+  box-shadow: 0.7px 1px 1.3px rgba(0, 0, 0, 0.124),
+    1.8px 2.5px 3.8px rgba(0, 0, 0, 0.178),
+    3.4px 4.6px 8.1px rgba(0, 0, 0, 0.22), 6px 8.3px 15px rgba(0, 0, 0, 0.262),
+    11.3px 15.5px 25.4px rgba(0, 0, 0, 0.316),
+    27px 37px 35px rgba(0, 0, 0, 0.44);
 }
 
 .calculator .row {
-    // height: 16.67%;
-    height: calc(1/6) * 100%;
-    width: 100%;
-    margin-left: 0;
+  // height: 16.67%;
+  height: calc(1 / 6) * 100%;
+  width: 100%;
+  margin-left: 0;
 }

@@ -6,12 +6,19 @@
   top: 50%;
   left: 50%;
   translate: -50% -50%;
+  box-shadow: 10px 15px 5px purple;
+  box-shadow: 0.7px 1px 1.3px rgba(0, 0, 0, 0.124), 1.8px 2.5px 3.8px rgba(0, 0, 0, 0.178), 3.4px 4.6px 8.1px rgba(0, 0, 0, 0.22), 6px 8.3px 15px rgba(0, 0, 0, 0.262), 11.3px 15.5px 25.4px rgba(0, 0, 0, 0.316), 27px 37px 35px rgba(0, 0, 0, 0.44);
 }
 
 .calculator .row {
   height: 16.6666666667%;
   width: 100%;
   margin-left: 0;
+}
+
+.button {
+  font-family: "Rubik Distressed", cursive, monospace;
+  font-size: 2.4rem;
 }
 
 .btn-1 {
@@ -40,8 +47,12 @@
 .monitor .row span {
   align-self: flex-end;
   padding: 1%;
-  font-size: 2.5rem;
+  font-size: 3rem;
   width: 100%;
+  font-family: "Nabla", cursive;
+  font-family: "VT323", monospace;
+  font-family: "Rubik Microbe", cursive;
+  overflow-y: auto;
 }
 .monitor .row span.history {
   font-size: 1rem;
@@ -57,7 +68,7 @@ html {
 }
 
 body {
-  background-color: beige;
+  background-color: rgb(161, 149, 131);
 }
 
 .App {
