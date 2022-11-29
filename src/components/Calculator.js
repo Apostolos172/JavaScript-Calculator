@@ -8,8 +8,8 @@ const twoButton = { class: "btn-1", id: "two", content: 2 };
 const threeButton = { class: "btn-1", id: "three", content: 3 };
 const fourButton = { class: "btn-1", id: "four", content: 4 };
 const fiveButton = { class: "btn-1", id: "five", content: 5 };
-const sixButton = { class: "btn-1", id: "six", content: 7 };
-const sevenButton = { class: "btn-1", id: "seven", content: 6 };
+const sixButton = { class: "btn-1", id: "six", content: 6 };
+const sevenButton = { class: "btn-1", id: "seven", content: 7 };
 const eightButton = { class: "btn-1", id: "eight", content: 8 };
 const nineButton = { class: "btn-1", id: "nine", content: 9 };
 
