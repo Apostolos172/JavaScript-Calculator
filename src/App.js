@@ -16,6 +16,8 @@ function App() {
     previousState: {},
     previousButtonPressed: "",
   };
+  // to do
+  // check unnecessary variables and delete them
   const [state, setState] = useState(initialState);
 
   // state for the previous each time button pressed
