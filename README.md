@@ -2,6 +2,17 @@
 
 ### Live at [apostolos172.github.io/JavaScript-Calculator](https://apostolos172.github.io/JavaScript-Calculator/)
 
+Take a look at the calculator with the following image
+
+![calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/calculator.png?raw=true)
+<!-- <img width:40% src="https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/installing.jpg?raw=true" alt="install calculator">
+<img width:40% src="https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/mobile_icon.jpg?raw=true" alt="mobile icon calculator"> -->
+Install app | The app after installing
+---|---
+![install calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/installing.jpg?raw=true)|![mobile icon calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/mobile_icon.jpg?raw=true)
+<!-- ![install calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/installing.jpg?raw=true)
+![mobile icon calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/mobile_icon.jpg?raw=true) -->
+
 > This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 <!-- # Getting Started with Create React App
