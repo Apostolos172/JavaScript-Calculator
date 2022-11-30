@@ -7,6 +7,9 @@ Take a look at the calculator with the following image
 ![calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/calculator.png?raw=true)
 <!-- <img width:40% src="https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/installing.jpg?raw=true" alt="install calculator">
 <img width:40% src="https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/mobile_icon.jpg?raw=true" alt="mobile icon calculator"> -->
+
+## Functionality of the PWA
+
 Install app | The app after installing
 ---|---
 ![install calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/installing.jpg?raw=true)|![mobile icon calculator](https://github.com/Apostolos172/JavaScript-Calculator/blob/master/screenshots/mobile_icon.jpg?raw=true)
